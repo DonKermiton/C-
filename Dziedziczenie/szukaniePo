@@ -1,0 +1,156 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+class  Urzadzenie {
+protected:
+	string firma;
+	int obroty;
+public:
+	Urzadzenie() {};
+	Urzadzenie(string firma, int obroty) :
+		firma(firma), obroty(obroty) {}
+
+	string daj_firme() {
+		return firma;
+	}
+	int daj_obroty() {
+		return obroty;
+	}
+	void pokaz_opis() {
+		cout << "dane urzadzenia: firma=" << firma << "\n obroty=" << obroty;
+	}
+};
+
+class SzlifierkaKatowa : public Urzadzenie {
+private:
+	int moc;
+	int tarcza;
+public:
+	SzlifierkaKatowa() {};
+	SzlifierkaKatowa(string firma, int obroty, int moc, int tarcza) :Urzadzenie(firma, obroty) {
+		this->moc = moc;
+		this->tarcza = tarcza;
+	}
+	int daj_moc() {
+		return moc;
+	}
+	int daj_tarcze() {
+		return tarcza;
+	}
+	void pokaz_opis() {
+		cout << "Dane szlifierki: firma=" << firma << "\n obroty=" << obroty <<"\nmoc=" << moc << "\n tarcza=" << tarcza;
+	}
+};
+
+class WiertarkoWkretarka : public Urzadzenie {
+private:
+	double napiecie;
+	string bateria;
+	int czas_ladow;
+public:
+	WiertarkoWkretarka() {};
+	WiertarkoWkretarka(string firma, int obroty, double napiecie, string bateria, int czas_ladow) :Urzadzenie(firma, obroty) {
+		this->napiecie = napiecie;
+		this->bateria = bateria;
+		this->czas_ladow = czas_ladow;
+	}
+	double daj_napiecie() {
+		return napiecie;
+	}
+	string daj_baterie() {
+		return bateria;
+	}
+	int daj_czas_ladow() {
+		return czas_ladow;
+	}
+	void pokaz_opis() {
+		cout << "Dane wiertarki: firma=" << firma << "\nobroty=" << obroty << "\nnapiecie=" << napiecie << "\nbateria=" << bateria << "\nczas ladowania=" << czas_ladow;
+	}
+
+};
+
+
+WiertarkoWkretarka* znajdz_wiertarke(WiertarkoWkretarka* tabl, int rozmiar_tab, int& licznik) {
+
+	WiertarkoWkretarka* tab_tmp = new WiertarkoWkretarka[rozmiar_tab];
+	int counter = 0;
+	int min = tabl[0].daj_czas_ladow();
+	for (int i = 0; i < rozmiar_tab; i++) {
+		if (min > tabl[i].daj_czas_ladow()) {
+			min = tabl[i].daj_czas_ladow();
+			tab_tmp[counter] = tabl[i];
+			counter++;
+			licznik++;
+		}
+	}
+	return tab_tmp;
+}
+
+
+
+SzlifierkaKatowa* znajdz_szlifiere(SzlifierkaKatowa* tabl, int rozmiar_tab,  int& licznik) {
+
+	SzlifierkaKatowa* tab_tmp = new SzlifierkaKatowa[rozmiar_tab];
+	int counter = 0;
+	int max = tabl[0].daj_obroty();
+	for (int i = 0; i < rozmiar_tab; i++) {
+		if (tabl[i].daj_obroty() > max) {
+			max = tabl[i].daj_obroty();
+			tab_tmp[counter] = tabl[i];
+			counter++;
+			licznik++;
+		}
+	}
+	return tab_tmp;
+}
+
+int main() {
+
+	int licznik = 0;
+	
+	SzlifierkaKatowa szlif_tab1[5] = {
+		 SzlifierkaKatowa("Szlifex",2000, 750, 300),
+		 SzlifierkaKatowa("Szlif_Kat", 4200, 800, 600),
+		 SzlifierkaKatowa("Katexpol",1800, 1200, 300),
+		 SzlifierkaKatowa("Powerex",3000,1200, 450),
+		 SzlifierkaKatowa("SprzetPol",3600, 850, 450)
+	};
+
+	WiertarkoWkretarka wiert_tab1[5] = {
+			 WiertarkoWkretarka("Szlifex",2000, 12.5, "bateria1", 240),
+			 WiertarkoWkretarka("Szlif_Kat", 4200, 10.0, "bateria1", 180),
+			 WiertarkoWkretarka("Katexpol",1800, 12.0, "bateria2", 300),
+			 WiertarkoWkretarka("Powerex",3000, 7.8, "bateria1", 240),
+			 WiertarkoWkretarka("SprzetPol",3600, 8.0, "bateria2", 360)
+	};
+
+
+	
+	
+
+	WiertarkoWkretarka* wynik_wkret = znajdz_wiertarke(wiert_tab1, 5, licznik);
+	cout << "\nWyniki wyszukiwania dla wkretarki" << endl;
+	if (licznik > 0)
+		for (int i = 0; i < licznik; i++) {
+			wynik_wkret[i].pokaz_opis();
+		}
+	else {
+		cout << "Nie znaleziono urzadzenia" << endl;
+	}
+
+
+
+	SzlifierkaKatowa* wynik_szlif = znajdz_szlifiere(szlif_tab1, 5, licznik);
+	cout << "\nWyniki wyszukiwania dla szlifierki" << endl;
+	if (licznik > 0)
+		for (int i = 0; i < licznik; i++) {
+			wynik_szlif[i].pokaz_opis();
+		}
+	else {
+		cout << "Nie znaleziono urzadzenia" << endl;
+	}
+	
+	system("pause");
+	return 0;
+}
